@@ -3,21 +3,64 @@ layout: default
 title: Home
 ---
 
-<div class="posts">
-  {% for post in paginator.posts %}
-  <article class="post">
-    <h1 class="post-title">
-      <a href="{{ post.url | relative_url }}">
-        {{ post.title }}
-      </a>
-    </h1>
+<section class="portfolio-hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Physics • Mathematics • Computation</p>
+    <h1>Mapping complex systems from neurons to galaxies.</h1>
+    <p class="hero-lede">
+      I’m Darshan Ramakrishnan, a physics undergraduate at Krea University. I explore how
+      complex systems evolve using tools from statistical physics, network science, and
+      scientific computing. This portfolio highlights my research interests, ongoing
+      projects, and collaborative work.
+    </p>
+    <div class="hero-actions">
+      <a class="button primary" href="{{ '/about/' | relative_url }}">About me</a>
+      <a class="button ghost" href="mailto:{{ site.author.email }}">Get in touch</a>
+    </div>
+  </div>
+  <div class="hero-highlights">
+    <div class="highlight-card">
+      <h2>Focus areas</h2>
+      <ul>
+        <li>Complex networks &amp; dynamical systems</li>
+        <li>Neuroscience-inspired modeling</li>
+        <li>Cosmic structure formation</li>
+        <li>Computational methods &amp; simulations</li>
+      </ul>
+    </div>
+    <div class="highlight-card">
+      <h2>Currently exploring</h2>
+      <ul>
+        <li>Agent-based models for emergent behavior</li>
+        <li>Information flow in neural circuits</li>
+        <li>Visualization of high-dimensional data</li>
+        <li>Interdisciplinary research collaborations</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-    <time datetime="{{ post.date | date_to_xmlschema }}" class="post-date">{{ post.date | date_to_string }}</time>
+<section class="portfolio-section">
+  <div class="section-header">
+    <h2>Featured work &amp; notes</h2>
+    <p>Selected writing and project updates from my research journey.</p>
+  </div>
+  <div class="posts">
+    {% for post in paginator.posts %}
+    <article class="post">
+      <h1 class="post-title">
+        <a href="{{ post.url | relative_url }}">
+          {{ post.title }}
+        </a>
+      </h1>
 
-    {{ post.content }}
-  </article>
-  {% endfor %}
-</div>
+      <time datetime="{{ post.date | date_to_xmlschema }}" class="post-date">{{ post.date | date_to_string }}</time>
+
+      {{ post.content }}
+    </article>
+    {% endfor %}
+  </div>
+</section>
 
 <div class="pagination">
   {% if paginator.next_page %}
