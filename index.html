@@ -1,33 +1,658 @@
----
-layout: default
-title: Home
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darshan R — Portfolio</title>
+<meta name="description" content="Selected work, writing, and resume.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
 
-<div class="posts">
-  {% for post in paginator.posts %}
-  <article class="post">
-    <h1 class="post-title">
-      <a href="{{ post.url | relative_url }}">
-        {{ post.title }}
+  :root{
+    --paper: #F1E8D6;
+    --paper-card: #E9DEC4;
+    --paper-deep: #E2D5B6;
+    --ink: #2A2319;
+    --ink-soft: #6E6250;
+    --ink-faint: #A79C86;
+    --accent: #A23B24;
+    --accent-soft: #C25A3D;
+    --moss: #4B5740;
+    --line: #C9BC9C;
+    --line-strong: #B6A780;
+
+    --serif-display: "Fraunces", serif;
+    --serif-body: "Source Serif 4", serif;
+    --mono: "IBM Plex Mono", monospace;
+
+    --max: 780px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body{
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* subtle paper grain */
+  body::before{
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(0,0,0,0.02) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(0,0,0,0.025) 0%, transparent 45%);
+    z-index: 0;
+  }
+
+  a{ color: inherit; }
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .wrap{
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- header ---------- */
+  header{
+    padding: 26px 0 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  header .wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .mark{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .mark .dot{
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  nav{
+    display: flex;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  nav a{
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding-bottom: 3px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  nav a:hover{ color: var(--ink); border-color: var(--ink-faint); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding: 76px 0 64px;
+    position: relative;
+  }
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: start;
+  }
+  .hero h1{
+    font-family: var(--serif-display);
+    font-weight: 500;
+    font-size: clamp(36px, 6vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 14px 0 22px;
+  }
+  .hero h1 em{
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .hero p.lede{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin: 0 0 28px;
+  }
+  .hero-links{
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .hero-links a{
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink-faint);
+    padding-bottom: 2px;
+  }
+  .hero-links a:hover{ border-color: var(--accent); color: var(--accent); }
+
+  /* the stamp — signature element */
+  .stamp{
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 8px;
+    transform: rotate(-8deg);
+    transition: transform 0.4s ease;
+  }
+  .stamp:hover{ transform: rotate(-8deg) scale(1.04); }
+  .stamp::before{
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0.55;
+  }
+  .stamp svg{ width: 100%; height: 100%; }
+  .stamp text{
+    font-family: var(--mono);
+    font-size: 8.6px;
+    letter-spacing: 0.2em;
+    fill: var(--accent);
+    text-transform: uppercase;
+  }
+  .stamp .center{
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: 15px;
+    fill: var(--accent);
+  }
+  @media (max-width: 620px){
+    .hero-grid{ grid-template-columns: 1fr; }
+    .stamp{ display: none; }
+  }
+
+  /* ---------- torn divider ---------- */
+  .torn{
+    height: 14px;
+    background:
+      linear-gradient(-45deg, var(--paper) 6px, transparent 0),
+      linear-gradient(45deg, var(--paper) 6px, transparent 0);
+    background-position: left top;
+    background-repeat: repeat-x;
+    background-size: 12px 14px;
+    background-color: var(--line);
+  }
+
+  /* ---------- section shell ---------- */
+  section{
+    padding: 60px 0;
+  }
+  section.tinted{
+    background: var(--paper-card);
+  }
+  .section-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .section-head h2{
+    font-family: var(--serif-display);
+    font-weight: 500;
+    font-size: 28px;
+    margin: 6px 0 0;
+    letter-spacing: -0.01em;
+  }
+  .count{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- work / catalog cards ---------- */
+  .catalog{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .card{
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 24px;
+    padding: 26px 22px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+  .card + .card{ margin-top: -1px; }
+  .card:hover{
+    background: #fbf6e9;
+    border-color: var(--line-strong);
+    transform: translateX(3px);
+  }
+  .card .tag-no{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    padding-top: 3px;
+  }
+  .card h3{
+    font-family: var(--serif-display);
+    font-weight: 500;
+    font-size: 21px;
+    margin: 0 0 8px;
+  }
+  .card p{
+    margin: 0 0 12px;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    max-width: 56ch;
+  }
+  .tags{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tags span{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--moss);
+    border: 1px solid var(--moss);
+    border-radius: 3px;
+    padding: 2px 7px;
+    opacity: 0.85;
+  }
+  @media (max-width: 560px){
+    .card{ grid-template-columns: 1fr; gap: 8px; }
+  }
+
+  /* ---------- writing / ledger ---------- */
+  .ledger{
+    border-top: 1px solid var(--line);
+  }
+  .ledger-row{
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 18px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+  }
+  .ledger-row:hover .lr-title{ color: var(--accent); }
+  .ledger-row .lr-date{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .lr-title{
+    font-family: var(--serif-body);
+    font-weight: 600;
+    font-size: 16.5px;
+    transition: color 0.15s ease;
+  }
+  .lr-arrow{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+  @media (max-width: 560px){
+    .ledger-row{ grid-template-columns: 1fr; gap: 4px; }
+    .lr-arrow{ display: none; }
+  }
+
+  /* ---------- resume ---------- */
+  .resume-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  .timeline{
+    border-left: 1px solid var(--line-strong);
+    padding-left: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .tl-item{ position: relative; }
+  .tl-item::before{
+    content: "";
+    position: absolute;
+    left: -27px;
+    top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--accent);
+  }
+  .tl-item .tl-date{
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tl-item h4{
+    font-family: var(--serif-display);
+    font-weight: 500;
+    font-size: 17px;
+    margin: 4px 0 4px;
+  }
+  .tl-item p{
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+  }
+  .resume-side p{ color: var(--ink-soft); }
+  .btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 13px 20px;
+    border-radius: 2px;
+    margin-top: 10px;
+    transition: background 0.15s ease;
+  }
+  .btn:hover{ background: var(--accent); }
+  @media (max-width: 640px){
+    .resume-grid{ grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding: 56px 0 64px;
+    border-top: 1px solid var(--line);
+  }
+  footer .foot-grid{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  footer h2{
+    font-family: var(--serif-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 26px;
+    margin: 10px 0 0;
+  }
+  .foot-links{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .foot-links a{ text-decoration: none; color: var(--ink-soft); }
+  .foot-links a:hover{ color: var(--accent); }
+  .fine{
+    margin-top: 46px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="mark"><span class="dot"></span> ARCHIVE / PORTFOLIO</div>
+    <nav>
+      <a href="#work">Work</a>
+      <a href="#writing">Writing</a>
+      <a href="#resume">Résumé</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">No. 01 — Personal record, est. 2026</div>
+      <h1>Darshan R<br>models minds, <em>writes</em> about them.</h1>
+      <p class="lede">
+        A working archive of research, writing, and projects at the edge of
+        physics and neuroscience — with detours into science communication,
+        design, and the occasional startup. Physics undergrad at Krea
+        University, minoring in Literature.
+      </p>
+      <div class="hero-links">
+        <a href="#work">See the work →</a>
+        <a href="mailto:darshanrpcmct2023@gmail.com">Say hello →</a>
+      </div>
+    </div>
+    <div class="stamp" aria-hidden="true">
+      <svg viewBox="0 0 128 128">
+        <path id="curveTop" fill="none" d="M 14,64 A 50,50 0 0 1 114,64" />
+        <path id="curveBottom" fill="none" d="M 114,64 A 50,50 0 0 1 14,64" />
+        <text><textPath href="#curveTop" startOffset="50%" text-anchor="middle">Est. 2026</textPath></text>
+        <text><textPath href="#curveBottom" startOffset="50%" text-anchor="middle">Verified · Original</textPath></text>
+        <text x="64" y="70" text-anchor="middle" class="center">on file</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="torn"></div>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Selected work</div>
+        <h2>What I've made</h2>
+      </div>
+      <div class="count">05 entries</div>
+    </div>
+
+    <div class="catalog">
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <div class="tag-no">No. 01</div>
+        <div>
+          <h3>Tritonia Swim Central Pattern Generator</h3>
+          <p>Rebuilt Getting et al.'s (1989) legacy NEURON/HOC model of a swim rhythm CPG in Python with Brian2. Led the modeling to test the rhythm's robustness against perturbations in stimulus strength and conductance, then ran a bifurcation analysis in XPPAUT to map equilibria and Hopf bifurcations. Co-presented at CAMP 2026.</p>
+          <div class="tags"><span>Brian2</span><span>XPPAUT</span><span>Computational Neuroscience</span></div>
+        </div>
       </a>
-    </h1>
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <div class="tag-no">No. 02</div>
+        <div>
+          <h3>Zebra Finch Birdsong HVC Network Model</h3>
+          <p>Reproduced Jin et al.'s (2007) network model of sequence generation by HVC neurons, then used it to investigate how intrinsic bursting and post-inhibitory rebound make the network robust to membrane noise. Co-presented at CAMP 2026.</p>
+          <div class="tags"><span>Neural Networks</span><span>Python</span></div>
+        </div>
+      </a>
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <div class="tag-no">No. 03</div>
+        <div>
+          <h3>Modelling Brainwave Disorders Using Kuramoto Networks</h3>
+          <p>Built Brian2 simulations of synchronization in coupled neural networks, presented at the Indian Academies of Science Summer School on Dynamical Systems &amp; Complexity, and extended the work into neuronal avalanches, self-organized criticality, and emergent dynamics.</p>
+          <div class="tags"><span>Dynamical Systems</span><span>Brian2</span></div>
+        </div>
+      </a>
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <div class="tag-no">No. 04</div>
+        <div>
+          <h3>History of Complex Numbers in Physics</h3>
+          <p>A general-audience talk tracing how complex numbers entered physics — connecting the history of science, mathematics, and physical theory for listeners with no technical background.</p>
+          <div class="tags"><span>Science Communication</span></div>
+        </div>
+      </a>
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <div class="tag-no">No. 05</div>
+        <div>
+          <h3>Chronos, The Physics Society — Visual Identity</h3>
+          <p>Co-founded Krea University's first physics society and pitched it into existence with the faculty. As lead designer, built the logo, social templates, and interactive demos of Lissajous figures, diffraction, and refraction for the annual Φ-esta festival.</p>
+          <div class="tags"><span>Design</span><span>Community Building</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
 
-    <time datetime="{{ post.date | date_to_xmlschema }}" class="post-date">{{ post.date | date_to_string }}</time>
+<div class="torn"></div>
 
-    {{ post.content }}
-  </article>
-  {% endfor %}
-</div>
+<section id="writing" class="tinted">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Field notes</div>
+        <h2>Writing</h2>
+      </div>
+      <div class="count">Add your own</div>
+    </div>
 
-<div class="pagination">
-  {% if paginator.next_page %}
-    <a class="pagination-item older" href="{{ paginator.next_page_path | relative_url }}">Older</a>
-  {% else %}
-    <span class="pagination-item older">Older</span>
-  {% endif %}
-  {% if paginator.previous_page %}
-    <a class="pagination-item newer" href="{{ paginator.previous_page_path | prepend: relative_url }}">Newer</a>
-  {% else %}
-    <span class="pagination-item newer">Newer</span>
-  {% endif %}
-</div>
+    <div class="ledger">
+      <a class="ledger-row" href="#" target="_blank" rel="noopener">
+        <span class="lr-date">2026.—</span>
+        <span class="lr-title">[Title — e.g. a CAMP 2026 writeup, or notes from the Dynamical Systems summer school]</span>
+        <span class="lr-arrow">→</span>
+      </a>
+      <a class="ledger-row" href="#" target="_blank" rel="noopener">
+        <span class="lr-date">2025.—</span>
+        <span class="lr-title">[Title — this is the natural home for the Literature-side writing]</span>
+        <span class="lr-arrow">→</span>
+      </a>
+      <a class="ledger-row" href="#" target="_blank" rel="noopener">
+        <span class="lr-date">2025.—</span>
+        <span class="lr-title">[Title — a science communication piece, e.g. adapted from the Complex Numbers talk]</span>
+        <span class="lr-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="torn"></div>
+
+<section id="resume">
+  <div class="wrap resume-grid">
+    <div>
+      <div class="eyebrow">Curriculum vitae</div>
+      <h2 style="font-family:var(--serif-display); font-weight:500; font-size:28px; margin:6px 0 26px;">Where I've been</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-date">2026</div>
+          <h4>Computational Approaches to Memory &amp; Plasticity</h4>
+          <p>15-day intensive at IISER Pune — NEURON, PyMOOSE, Brian2, and two team projects on CPGs and network models.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2025</div>
+          <h4>Summer School on Dynamical Systems &amp; Complexity</h4>
+          <p>Selected cohort at the Indian Academies of Science &amp; UPES — synchronization, nonlinear dynamics, emergent behaviour.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2025</div>
+          <h4>Teaching Assistant, PHYS110 — Krea University</h4>
+          <p>Guided lab demonstrations and discussion for an introductory experiential physics course.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2024 — 2026</div>
+          <h4>Co-founder, Chronos — The Physics Society</h4>
+          <p>Krea University's first physics society; pitched it into existence and led its visual identity.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2023 — 2026</div>
+          <h4>B.Sc. Physics, Krea University</h4>
+          <p>CGPA 7.79/10, additional concentration in Literature, full tuition waiver.</p>
+        </div>
+      </div>
+    </div>
+    <div class="resume-side">
+      <div class="eyebrow">Full record</div>
+      <h2 style="font-family:var(--serif-display); font-weight:500; font-size:28px; margin:6px 0 16px;">Résumé</h2>
+      <p>The timeline covers the highlights — the PDF has the full detail: earlier roles, tools, and specifics that don't fit a scannable page.</p>
+      <a class="btn" href="resume.pdf" download>↓ Download PDF</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="eyebrow">Get in touch</div>
+        <h2>Let's talk.</h2>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:darshanrpcmct2023@gmail.com">darshanrpcmct2023@gmail.com</a>
+        <a href="https://github.com/The-Neutron-Stargazer" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="https://linkedin.com/in/darshan-r" target="_blank" rel="noopener">LinkedIn ↗ (check handle)</a>
+      </div>
+    </div>
+    <div class="fine">
+      <span>© 2026 Darshan R. Filed and indexed.</span>
+      <span>Built with care, not a template.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
